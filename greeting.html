@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+ <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
@@ -7,384 +8,106 @@
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@300;400;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --morning-from: #f6d365; --morning-to: #fda085;
       --noon-from:    #43cea2; --noon-to:    #185a9d;
       --evening-from: #fc4a1a; --evening-to: #f7b733;
       --night-from:   #0f0c29; --night-to:   #302b63;
     }
-
-    body {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Noto Serif TC', serif;
-      overflow: hidden; background: #111;
-    }
-
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Noto Serif TC', serif; overflow: hidden; background: #111; }
     .bg { position: fixed; inset: 0; z-index: 0; transition: background 1.6s ease; }
     .bg.morning { background: linear-gradient(135deg, var(--morning-from), var(--morning-to)); }
     .bg.noon    { background: linear-gradient(135deg, var(--noon-from),    var(--noon-to));    }
     .bg.evening { background: linear-gradient(135deg, var(--evening-from), var(--evening-to)); }
     .bg.night   { background: linear-gradient(135deg, var(--night-from),   var(--night-to));   }
-
     .particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
-    .particle {
-      position: absolute; border-radius: 50%; opacity: 0;
-      animation: float linear infinite;
-    }
-    @keyframes float {
-      0%   { transform: translateY(110vh) scale(0); opacity: 0; }
-      10%  { opacity: .6; } 90% { opacity: .4; }
-      100% { transform: translateY(-10vh) scale(1.3); opacity: 0; }
-    }
-
-    /* ── WHITE card ── */
-    .card {
-      position: relative; z-index: 10; text-align: center;
-      padding: 3.5rem 4rem; border-radius: 2rem;
-      background: rgba(255,248,220,.88);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,.9);
-      box-shadow: 0 30px 80px rgba(0,0,0,.35);
-      animation: cardIn .9s cubic-bezier(.22,1,.36,1) both;
-      max-width: 480px; width: 90vw;
-    }
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(40px) scale(.95); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .icon {
-      font-size: 4.5rem; line-height: 1;
-      animation: pulse 3s ease-in-out infinite;
-      display: block; margin-bottom: 1.2rem;
-    }
-    @keyframes pulse {
-      0%,100% { transform: scale(1); } 50% { transform: scale(1.08); }
-    }
-
-    /* greeting stays colorful */
-    .greeting {
-      font-family: 'Ma Shan Zheng', cursive;
-      font-size: clamp(2.2rem, 6vw, 3.8rem);
-      color: #1a1a1a; letter-spacing: .1em;
-      animation: textIn .7s .3s cubic-bezier(.22,1,.36,1) both;
-    }
-    @keyframes textIn {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .sub {
-      margin-top: .8rem; font-size: .95rem;
-      color: #444; letter-spacing: .1em;
-      animation: textIn .7s .55s cubic-bezier(.22,1,.36,1) both;
-    }
-
-    .time-display {
-      margin-top: 1.4rem; font-size: 2.4rem; font-weight: 300;
-      color: #222; letter-spacing: .05em;
-      font-variant-numeric: tabular-nums;
-      animation: textIn .7s .7s cubic-bezier(.22,1,.36,1) both;
-    }
-
-    .divider {
-      width: 60px; height: 2px; background: #ccc;
-      border-radius: 2px; margin: 1.2rem auto 0;
-      animation: textIn .7s .85s cubic-bezier(.22,1,.36,1) both;
-    }
-
-    .date-display {
-      margin-top: .7rem; font-size: .88rem;
-      color: #333; letter-spacing: .1em; font-weight: 400;
-      animation: textIn .7s .95s cubic-bezier(.22,1,.36,1) both;
-    }
-
-    /* ── schedule ── */
-    .schedule-section {
-      margin-top: 1.6rem;
-      border-top: 1px solid #ddd;
-      padding-top: 1.2rem;
-      animation: textIn .7s 1.1s cubic-bezier(.22,1,.36,1) both;
-    }
-    .schedule-title {
-      font-size: .78rem; letter-spacing: .2em;
-      color: #666; margin-bottom: .8rem;
-      text-transform: uppercase; text-align: center;
-      font-weight: 700;
-    }
-    .schedule-item {
-      display: flex; align-items: center; gap: .8rem;
-      background: #f3f3f3; border-radius: .9rem;
-      padding: .75rem 1rem; margin-bottom: .45rem; text-align: left;
-    }
-    .schedule-dot { font-size: 1.2rem; flex-shrink: 0; }
-    .schedule-info { flex: 1; }
-    .schedule-name { font-size: 1rem; color: #111; font-weight: 600; }
-    .schedule-time { font-size: .82rem; color: #555; margin-top: .2rem; }
-
-    /* ── speak btn ── */
-    .motivation {
-      margin-top: .7rem; font-size: .88rem;
-      color: #222; font-weight: 600; letter-spacing: .05em;
-      animation: textIn .7s .65s cubic-bezier(.22,1,.36,1) both;
-    }
-
-    .speak-btn {
-      margin-top: 1.4rem;
-      background: #222;
-      border: none;
-      border-radius: 2rem; padding: .55rem 1.6rem;
-      color: #fff; font-size: .85rem; letter-spacing: .1em;
-      cursor: pointer; transition: background .2s;
-      font-family: 'Noto Serif TC', serif;
-      animation: textIn .7s 1.3s cubic-bezier(.22,1,.36,1) both;
-    }
+    .particle { position: absolute; border-radius: 50%; opacity: 0; animation: float linear infinite; }
+    @keyframes float { 0% { transform: translateY(110vh) scale(0); opacity: 0; } 10% { opacity: .6; } 90% { opacity: .4; } 100% { transform: translateY(-10vh) scale(1.3); opacity: 0; } }
+    .card { position: relative; z-index: 10; text-align: center; padding: 3.5rem 4rem; border-radius: 2rem; background: rgba(255,248,220,.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,.9); box-shadow: 0 30px 80px rgba(0,0,0,.35); animation: cardIn .9s cubic-bezier(.22,1,.36,1) both; max-width: 480px; width: 90vw; }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(40px) scale(.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .icon { font-size: 4.5rem; line-height: 1; animation: pulse 3s ease-in-out infinite; display: block; margin-bottom: 1.2rem; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    .greeting { font-family: 'Ma Shan Zheng', cursive; font-size: clamp(2.2rem, 6vw, 3.8rem); color: #1a1a1a; letter-spacing: .1em; animation: textIn .7s .3s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes textIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .sub { margin-top: .8rem; font-size: .95rem; color: #444; letter-spacing: .1em; animation: textIn .7s .55s cubic-bezier(.22,1,.36,1) both; }
+    .time-display { margin-top: 1.4rem; font-size: 2.4rem; font-weight: 300; color: #222; letter-spacing: .05em; font-variant-numeric: tabular-nums; animation: textIn .7s .7s cubic-bezier(.22,1,.36,1) both; }
+    .divider { width: 60px; height: 2px; background: #ccc; border-radius: 2px; margin: 1.2rem auto 0; animation: textIn .7s .85s cubic-bezier(.22,1,.36,1) both; }
+    .date-display { margin-top: .7rem; font-size: .88rem; color: #333; letter-spacing: .1em; font-weight: 400; animation: textIn .7s .95s cubic-bezier(.22,1,.36,1) both; }
+    .motivation { margin-top: .7rem; font-size: .88rem; color: #222; font-weight: 600; letter-spacing: .05em; animation: textIn .7s .65s cubic-bezier(.22,1,.36,1) both; }
+    .speak-btn { margin-top: 1.4rem; background: #222; border: none; border-radius: 2rem; padding: .55rem 1.6rem; color: #fff; font-size: .85rem; letter-spacing: .1em; cursor: pointer; transition: background .2s; font-family: 'Noto Serif TC', serif; animation: textIn .7s 1.3s cubic-bezier(.22,1,.36,1) both; }
     .speak-btn:hover { background: #444; }
     .speak-btn.speaking { background: #666; }
-
-    /* ── timer ── */
-    .timer-section {
-      margin-top: 1.4rem;
-      border-top: 1px solid #ddd;
-      padding-top: 1.2rem;
-      animation: textIn .7s 1.4s cubic-bezier(.22,1,.36,1) both;
-    }
-    .timer-title {
-      font-size: .78rem; letter-spacing: .2em;
-      color: #666; margin-bottom: .8rem;
-      text-transform: uppercase; text-align: center;
-      font-weight: 700;
-    }
-    .timer-display {
-      font-size: 2.2rem; font-weight: 300;
-      color: #111; text-align: center;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: .05em; margin-bottom: .8rem;
-    }
-    .timer-display.urgent { color: #e03e3e; animation: pulse 1s ease-in-out infinite; }
-    .timer-inputs {
-      display: flex; gap: .5rem; justify-content: center;
-      align-items: center; margin-bottom: .8rem;
-    }
-    .timer-input {
-      width: 3.5rem; text-align: center;
-      font-size: 1.1rem; padding: .3rem .2rem;
-      border: 1px solid #ccc; border-radius: .5rem;
-      font-family: 'Noto Serif TC', serif;
-      background: #f9f9f9; color: #111;
-    }
-    .timer-sep { font-size: 1.2rem; color: #555; font-weight: 700; }
-    .timer-btns { display: flex; gap: .5rem; justify-content: center; }
-    .timer-btn {
-      background: #222; border: none; border-radius: 2rem;
-      padding: .45rem 1.2rem; color: #fff;
-      font-size: .82rem; letter-spacing: .08em;
-      cursor: pointer; transition: background .2s;
-      font-family: 'Noto Serif TC', serif;
-    }
-    .timer-btn:hover { background: #444; }
-    .timer-btn.red { background: #c0392b; }
-    .timer-btn.red:hover { background: #e74c3c; }
   </style>
 </head>
 <body>
-
 <div class="bg" id="bg"></div>
 <div class="particles" id="particles"></div>
-
 <div class="card">
   <span class="icon" id="icon"></span>
   <div class="greeting" id="greeting"></div>
   <div class="sub" id="sub"></div>
   <div class="motivation" id="motivation"></div>
-
-  <div class="timer-section">
-    <div class="timer-title">⏱️ 计时器</div>
-    <div class="timer-display" id="timerDisplay">00:00</div>
-    <div class="timer-inputs">
-      <input class="timer-input" id="timerMin" type="number" min="0" max="99" value="5" />
-      <span class="timer-sep">分</span>
-      <input class="timer-input" id="timerSec" type="number" min="0" max="59" value="0" />
-      <span class="timer-sep">秒</span>
-    </div>
-    <div class="timer-btns">
-      <button class="timer-btn" onclick="startTimer()">▶ 开始</button>
-      <button class="timer-btn" onclick="pauseTimer()">⏸ 暂停</button>
-      <button class="timer-btn red" onclick="resetTimer()">↺ 重置</button>
-    </div>
-  </div>
-  <div class="time-display" id="clock"></div>
-  <div class="divider"></div>
-  <div class="date-display" id="dateDisplay"></div>
-
-  <div class="schedule-section">
-    <div class="schedule-title">今日行程</div>
-    <div class="schedule-item">
-      <span class="schedule-dot">🍷</span>
-      <div class="schedule-info">
-        <div class="schedule-name">Lambert 酒庄</div>
-        <div class="schedule-time">上午 11:10 – 12:10</div>
-      </div>
-    </div>
-  </div>
-
   <div style="display:flex;gap:.8rem;justify-content:center;margin-top:1.4rem;">
     <button class="speak-btn" id="speakBtn" onclick="speakAll()" style="margin-top:0;">🔊 朗读问候</button>
     <button class="speak-btn" id="langBtn" onclick="toggleLang()" style="margin-top:0;">🌐 English</button>
   </div>
+  <div class="time-display" id="clock"></div>
+  <div class="divider"></div>
+  <div class="date-display" id="dateDisplay"></div>
 </div>
-
 <script>
   const motivations = {
-    morning: [
-      '每一个早晨都是新的开始，今天也要威威风风！💪',
-      '大哥早起，天下无敌！今天必定顺风顺水！🌅',
-      '成功的人比别人早起，大哥你已经赢在起跑线！🏅',
-      '新的一天，新的机遇，大哥的好运从早晨开始！☀️',
-      '早晨的大哥精神奕奕，今天没有什么难得倒你！🔥',
-    ],
-    noon: [
-      '上午做得好，下午继续保持，大哥天下无敌！🔥',
-      '午后时分，大哥依然斗志昂扬，继续冲！💥',
-      '半天过了，大哥的能量还满满的，下午继续称霸！🏆',
-      '成功的人下午不松懈，大哥你就是那种人！💯',
-      '午安大哥，休息片刻，下午再创高峰！🚀',
-    ],
-    evening: [
-      '今天辛苦了，大哥的努力没有白费，明天继续称霸！🏆',
-      '每一天的努力都是明日成功的基石，大哥加油！🌟',
-      '大哥今天的付出，明天一定有回报！好好休息！🌙',
-      '能者多劳，大哥辛苦了，今晚好好充电！⚡',
-      '日落不是结束，是明日再战的准备，大哥威！🌆',
-    ],
-    night: [
-      '大哥连夜晚都咁拼搏，注意身体，休息好才能再战！🌟',
-      '夜深了，大哥还在坚持，这就是成功者的精神！💫',
-      '今晚好好睡一觉，明天的大哥更加无敌！🌌',
-      '身体是革命的本钱，大哥记得休息，明天再拼！💤',
-      '凌晨的坚持，是别人看不见的努力，大哥你最棒！⭐',
-    ],
+    morning: ['每一个早晨都是新的开始，今天也要威威风风！💪','大哥早起，天下无敌！今天必定顺风顺水！🌅','成功的人比别人早起，大哥你已经赢在起跑线！🏅','新的一天，新的机遇，大哥的好运从早晨开始！☀️','早晨的大哥精神奕奕，今天没有什么难得倒你！🔥'],
+    noon:    ['上午做得好，下午继续保持，大哥天下无敌！🔥','午后时分，大哥依然斗志昂扬，继续冲！💥','半天过了，大哥的能量还满满的，下午继续称霸！🏆','成功的人下午不松懈，大哥你就是那种人！💯','午安大哥，休息片刻，下午再创高峰！🚀'],
+    evening: ['今天辛苦了，大哥的努力没有白费，明天继续称霸！🏆','每一天的努力都是明日成功的基石，大哥加油！🌟','大哥今天的付出，明天一定有回报！好好休息！🌙','能者多劳，大哥辛苦了，今晚好好充电！⚡','日落不是结束，是明日再战的准备，大哥威！🌆'],
+    night:   ['大哥连夜晚都咁拼搏，注意身体，休息好才能再战！🌟','夜深了，大哥还在坚持，这就是成功者的精神！💫','今晚好好睡一觉，明天的大哥更加无敌！🌌','身体是革命的本钱，大哥记得休息，明天再拼！💤','凌晨的坚持，是别人看不见的努力，大哥你最棒！⭐'],
   };
-
   const motivationsEn = {
-    morning: [
-      "Every morning is a fresh start — go conquer the day, Boss! 💪",
-      "Early risers rule the world. You're already ahead, Boss! 🌅",
-      "Success loves those who rise early. That's you, Boss! 🏅",
-      "A new day, a new opportunity — Boss, today is yours! ☀️",
-      "Morning Boss, full power mode — nothing can stop you today! 🔥",
-    ],
-    noon: [
-      "Great morning, even better afternoon — keep dominating, Boss! 🔥",
-      "Midday check-in: Boss is still going strong. Unstoppable! 💥",
-      "Half the day done and still fired up — that's the Boss way! 🏆",
-      "Winners don't slow down after lunch. You never do, Boss! 💯",
-      "Recharge for a moment, then go conquer the afternoon, Boss! 🚀",
-    ],
-    evening: [
-      "Another day well fought, Boss. Your efforts never go to waste! 🏆",
-      "Every evening of hard work builds tomorrow's success, Boss! 🌟",
-      "Today's dedication pays off tomorrow — rest well, Boss! 🌙",
-      "The strong work hard; the wise also rest. Recharge, Boss! ⚡",
-      "Sunset isn't the end — it's prep for tomorrow's victory, Boss! 🌆",
-    ],
-    night: [
-      "Still going at this hour? That's why you're the Boss! 🌟",
-      "Late nights and big dreams — the hallmark of a true Boss! 💫",
-      "Get some good rest tonight — tomorrow's Boss needs it! 🌌",
-      "Your health is your greatest asset. Rest up, Boss! 💤",
-      "The effort no one sees is what makes you extraordinary, Boss! ⭐",
-    ],
+    morning: ["Every morning is a fresh start — go conquer the day, Boss! 💪","Early risers rule the world. You're already ahead, Boss! 🌅","Success loves those who rise early. That's you, Boss! 🏅","A new day, a new opportunity — Boss, today is yours! ☀️","Morning Boss, full power mode — nothing can stop you today! 🔥"],
+    noon:    ["Great morning, even better afternoon — keep dominating, Boss! 🔥","Midday check-in: Boss is still going strong. Unstoppable! 💥","Half the day done and still fired up — that's the Boss way! 🏆","Winners don't slow down after lunch. You never do, Boss! 💯","Recharge for a moment, then go conquer the afternoon, Boss! 🚀"],
+    evening: ["Another day well fought, Boss. Your efforts never go to waste! 🏆","Every evening of hard work builds tomorrow's success, Boss! 🌟","Today's dedication pays off tomorrow — rest well, Boss! 🌙","The strong work hard; the wise also rest. Recharge, Boss! ⚡","Sunset isn't the end — it's prep for tomorrow's victory, Boss! 🌆"],
+    night:   ["Still going at this hour? That's why you're the Boss! 🌟","Late nights and big dreams — the hallmark of a true Boss! 💫","Get some good rest tonight — tomorrow's Boss needs it! 🌌","Your health is your greatest asset. Rest up, Boss! 💤","The effort no one sees is what makes you extraordinary, Boss! ⭐"],
   };
-
   const greetingsEn = {
     morning: { text: "Good Morning, Boss!", sub: "A brand new day — let's make it count!" },
     noon:    { text: "Good Afternoon, Boss!", sub: "Hope your day is going great!" },
     evening: { text: "Good Evening, Boss!", sub: "Time to unwind and recharge!" },
     night:   { text: "Good Night, Boss!", sub: "Rest well — you've earned it!" },
   };
-
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
   function getGreeting(hour) {
     if (hour >= 6  && hour < 12) return { text: '早晨，大哥！', icon: '☀️', period: 'morning', sub: '新的一天，精神飽滿！', motivation: pick(motivations.morning) };
     if (hour >= 12 && hour < 18) return { text: '午安，大哥！', icon: '🌤️', period: 'noon',    sub: '午後時光，好好享受！', motivation: pick(motivations.noon) };
     if (hour >= 18 && hour < 24) return { text: '晚安，大哥！', icon: '🌙', period: 'evening', sub: '辛苦了，好好休息！',   motivation: pick(motivations.evening) };
     return                              { text: '夜安，大哥！', icon: '🌌', period: 'night',   sub: '夜深了，注意身體！',   motivation: pick(motivations.night) };
   }
-
   function pad(n) { return String(n).padStart(2, '0'); }
-
   const now  = new Date();
   const info = getGreeting(now.getHours());
-
-  document.getElementById('icon').textContent     = info.icon;
-  document.getElementById('greeting').textContent = info.text;
-  document.getElementById('sub').textContent        = info.sub;
+  document.getElementById('icon').textContent      = info.icon;
+  document.getElementById('greeting').textContent  = info.text;
+  document.getElementById('sub').textContent       = info.sub;
   document.getElementById('motivation').textContent = info.motivation;
   document.getElementById('bg').className = 'bg ' + info.period;
-  const cardColors = {
-    morning: 'rgba(255,248,220,.90)',
-    noon:    'rgba(220,245,240,.90)',
-    evening: 'rgba(255,235,220,.90)',
-    night:   'rgba(220,215,245,.90)',
-  };
+  const cardColors = { morning: 'rgba(255,248,220,.90)', noon: 'rgba(220,245,240,.90)', evening: 'rgba(255,235,220,.90)', night: 'rgba(220,215,245,.90)' };
   document.querySelector('.card').style.background = cardColors[info.period];
-
   function updateClock() {
     const n = new Date();
-    document.getElementById('clock').textContent =
-      `${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;
+    document.getElementById('clock').textContent = `${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;
     const days = ['日','一','二','三','四','五','六'];
-    document.getElementById('dateDisplay').textContent =
-      `${n.getFullYear()} 年 ${n.getMonth()+1} 月 ${n.getDate()} 日　星期${days[n.getDay()]}`;
+    document.getElementById('dateDisplay').textContent = `${n.getFullYear()} 年 ${n.getMonth()+1} 月 ${n.getDate()} 日　星期${days[n.getDay()]}`;
   }
   updateClock();
   setInterval(updateClock, 1000);
-
-  const schedule = [{ name: 'Lambert 酒庄', time: '上午十一点十分到十二点十分', timeEn: '11:10 AM to 12:10 PM' }];
-
-  function stripEmoji(str) {
-    return str.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{1F300}-\u{1F9FF}\u{1FA00}-\u{1FA9F}]/gu, '').replace(/\s+/g, ' ').trim();
-  }
-
-  function buildSpeechText() {
-    let txt = stripEmoji(info.text) + stripEmoji(info.sub) + stripEmoji(info.motivation);
-    if (schedule.length > 0) {
-      txt += `今天你有${schedule.length}个行程。`;
-      schedule.forEach((s, i) => {
-        txt += `第${['一','二','三','四','五'][i]}个：${s.name}，时间是${s.time}。`;
-      });
-    } else {
-      txt += '今天没有行程，好好休息！';
-    }
-    return txt;
-  }
-
+  function stripEmoji(str) { return str.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{1F300}-\u{1F9FF}\u{1FA00}-\u{1FA9F}]/gu, '').replace(/\s+/g, ' ').trim(); }
+  function buildSpeechText() { return stripEmoji(info.text) + stripEmoji(info.sub) + stripEmoji(info.motivation); }
   let useChinese = true;
-
   function buildEnglishText() {
     const enInfo = greetingsEn[info.period];
     const enMot  = pick(motivationsEn[info.period]);
-    let txt = stripEmoji(enInfo.text) + ' ' + stripEmoji(enInfo.sub) + ' ' + stripEmoji(enMot);
-    if (schedule.length > 0) {
-      txt += ' Today you have ' + schedule.length + ' appointment' + (schedule.length > 1 ? 's' : '') + '.';
-      schedule.forEach((s, i) => {
-        txt += ' Number ' + (i+1) + ': ' + s.name + ', at ' + s.timeEn + '.';
-      });
-    } else {
-      txt += ' You have no appointments today. Enjoy your free time!';
-    }
-    return txt;
+    return stripEmoji(enInfo.text) + ' ' + stripEmoji(enInfo.sub) + ' ' + stripEmoji(enMot);
   }
-
-  function toggleLang() {
-    useChinese = !useChinese;
-    document.getElementById('langBtn').textContent = useChinese ? '🌐 English' : '🌐 中文';
-  }
-
+  function toggleLang() { useChinese = !useChinese; document.getElementById('langBtn').textContent = useChinese ? '🌐 English' : '🌐 中文'; }
   function speakAll() {
     if (!window.speechSynthesis) { alert('Your browser does not support speech synthesis.'); return; }
     window.speechSynthesis.cancel();
@@ -392,121 +115,28 @@
     const text  = useChinese ? buildSpeechText() : buildEnglishText();
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang  = useChinese ? 'zh-CN' : 'en-US';
-    utter.rate  = 0.92;
-    utter.pitch = 1;
+    utter.rate  = 0.92; utter.pitch = 1;
     const voices = speechSynthesis.getVoices();
-    const voice  = useChinese
-      ? voices.find(v => v.lang.startsWith('zh'))
-      : voices.find(v => v.lang.startsWith('en'));
+    const voice  = useChinese ? voices.find(v => v.lang.startsWith('zh')) : voices.find(v => v.lang.startsWith('en'));
     if (voice) utter.voice = voice;
     btn.textContent = useChinese ? '🔊 朗读中…' : '🔊 Speaking…';
     btn.classList.add('speaking');
-    utter.onend  = () => { btn.textContent = '🔊 朗读问候'; btn.classList.remove('speaking'); };
+    utter.onend   = () => { btn.textContent = '🔊 朗读问候'; btn.classList.remove('speaking'); };
     utter.onerror = () => { btn.textContent = '🔊 朗读问候'; btn.classList.remove('speaking'); };
     speechSynthesis.speak(utter);
   }
-
-  function tryAutoSpeak() {
-    if (speechSynthesis.getVoices().length > 0) speakAll();
-    else speechSynthesis.onvoiceschanged = speakAll;
-  }
+  function tryAutoSpeak() { if (speechSynthesis.getVoices().length > 0) speakAll(); else speechSynthesis.onvoiceschanged = speakAll; }
   setTimeout(tryAutoSpeak, 800);
-
-  const colors = {
-    morning: ['#ffecd2','#fcb69f','#fff1c1'],
-    noon:    ['#a8edea','#fed6e3','#d4fc79'],
-    evening: ['#f7971e','#ffd200','#fc4a1a'],
-    night:   ['#a18cd1','#fbc2eb','#c3cfe2'],
-  };
-  const palette   = colors[info.period];
+  const colors = { morning: ['#ffecd2','#fcb69f','#fff1c1'], noon: ['#a8edea','#fed6e3','#d4fc79'], evening: ['#f7971e','#ffd200','#fc4a1a'], night: ['#a18cd1','#fbc2eb','#c3cfe2'] };
+  const palette = colors[info.period];
   const container = document.getElementById('particles');
   for (let i = 0; i < 28; i++) {
     const el = document.createElement('div');
     el.className = 'particle';
     const size = Math.random() * 14 + 5;
-    el.style.cssText = `
-      width:${size}px;height:${size}px;
-      left:${Math.random()*100}%;
-      background:${palette[Math.floor(Math.random()*palette.length)]};
-      animation-duration:${Math.random()*12+8}s;
-      animation-delay:${Math.random()*-15}s;
-      filter:blur(${Math.random()*2}px);
-    `;
+    el.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;background:${palette[Math.floor(Math.random()*palette.length)]};animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*-15}s;filter:blur(${Math.random()*2}px);`;
     container.appendChild(el);
   }
-
-  /* ── timer ── */
-  let timerInterval = null;
-  let timerSeconds  = 0;
-  let timerRunning  = false;
-
-  function updateTimerDisplay(secs) {
-    const m = String(Math.floor(secs / 60)).padStart(2, '0');
-    const s = String(secs % 60).padStart(2, '0');
-    const el = document.getElementById('timerDisplay');
-    el.textContent = m + ':' + s;
-    el.classList.toggle('urgent', secs <= 10 && secs > 0);
-  }
-
-  function startTimer() {
-    if (timerRunning) return;
-    if (timerSeconds === 0) {
-      const m = parseInt(document.getElementById('timerMin').value) || 0;
-      const s = parseInt(document.getElementById('timerSec').value) || 0;
-      timerSeconds = m * 60 + s;
-      if (timerSeconds === 0) return;
-    }
-    timerRunning = true;
-    timerInterval = setInterval(() => {
-      timerSeconds--;
-      updateTimerDisplay(timerSeconds);
-      if (timerSeconds <= 0) {
-        clearInterval(timerInterval);
-        timerRunning = false;
-        ringAlarm();
-      }
-    }, 1000);
-    updateTimerDisplay(timerSeconds);
-  }
-
-  function pauseTimer() {
-    clearInterval(timerInterval);
-    timerRunning = false;
-  }
-
-  function resetTimer() {
-    clearInterval(timerInterval);
-    timerRunning  = false;
-    timerSeconds  = 0;
-    document.getElementById('timerDisplay').textContent = '00:00';
-    document.getElementById('timerDisplay').classList.remove('urgent');
-    document.getElementById('timerMin').value = '5';
-    document.getElementById('timerSec').value = '0';
-  }
-
-  function ringAlarm() {
-    // Use AudioContext to generate a beep
-    try {
-      const ctx  = new (window.AudioContext || window.webkitAudioContext)();
-      function beep(freq, start, dur) {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.connect(g); g.connect(ctx.destination);
-        o.frequency.value = freq;
-        o.type = 'sine';
-        g.gain.setValueAtTime(0.6, ctx.currentTime + start);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
-        o.start(ctx.currentTime + start);
-        o.stop(ctx.currentTime + start + dur);
-      }
-      beep(880, 0,    0.3);
-      beep(880, 0.35, 0.3);
-      beep(880, 0.70, 0.3);
-      beep(1100, 1.1, 0.6);
-    } catch(e) {}
-    document.getElementById('timerDisplay').textContent = '🔔 时间到！';
-  }
-
 </script>
 </body>
 </html>
